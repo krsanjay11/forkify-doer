@@ -31,6 +31,36 @@ export const AJAX = async function(url, uploadData = undefined){
     }
 };
 
+export const numberToFraction = function(amount){
+  if(parseFloat(amount)===parseInt(amount)){
+    return amount;
+  }
+
+  const gcd = function(a, b){
+    if(b < 0.0000001){
+      return a;
+    }
+    return gcd(b, Math.floor(a%b));
+  };
+  const len = amount.toString().length - 2;
+  let denominator = Math.pow(10, len);
+  let numerator = amount * denominator;
+  var divisor = gcd(numerator, denominator);
+  numerator /= divisor;
+  denominator /= divisor;
+  let base = 0;
+
+  if(numerator > denominator){
+    base = Math.floor(numerator / denominator);
+    numerator -= base * denominator;
+  }
+  amount = Math.floor(numerator) + '/' + Math.floor(denominator);
+  if(base){
+    amount = base + ' ' + amount;
+  }
+  return amount;
+}
+
 /*
 export const getJSON = async function(url){
   // console.log(url); // https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bca10, https://forkify-api.herokuapp.com/api/v2/recipes/?search=pizza
